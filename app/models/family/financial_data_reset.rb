@@ -47,6 +47,7 @@ class Family::FinancialDataReset
     coinstats_items
     enable_banking_items
     financekit_items
+    fineco_items
     fio_items
     ibkr_items
     indexa_capital_items
@@ -72,7 +73,8 @@ class Family::FinancialDataReset
       PROVIDER_ITEM_ASSOCIATIONS.select do |association_name|
         association = Family.reflect_on_association(association_name)
 
-        association&.klass&.included_modules&.include?(Syncable)
+        modules = association&.klass&.included_modules
+        modules&.include?(Syncable) || modules&.include?(ProviderItemOwnable)
       rescue NameError
         false
       end
