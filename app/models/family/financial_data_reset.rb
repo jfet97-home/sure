@@ -45,6 +45,7 @@ class Family::FinancialDataReset
     brex_items
     coinbase_items
     coinstats_items
+    directa_items
     enable_banking_items
     financekit_items
     fineco_items
