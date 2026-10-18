@@ -43,6 +43,7 @@ class Family::FinancialDataReset
   PROVIDER_ITEM_ASSOCIATIONS = %i[
     binance_items
     brex_items
+    ca_auto_bank_items
     coinbase_items
     coinstats_items
     directa_items
