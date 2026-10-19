@@ -341,7 +341,7 @@ class Account < ApplicationRecord
       create_and_sync(attributes, skip_initial_sync: true)
     end
 
-    def create_from_enable_banking_account(enable_banking_account, account_type, subtype = nil)
+    def create_from_enable_banking_account(enable_banking_account, account_type, subtype = nil, owner: nil)
       # Get the balance from Enable Banking
       balance = enable_banking_account.current_balance || 0
 
@@ -361,6 +361,7 @@ class Account < ApplicationRecord
         cash_balance: cash_balance,
         currency: enable_banking_account.currency || "EUR"
       }
+      attributes[:owner] = owner if owner
 
       accountable_attributes = {}
       accountable_attributes[:subtype] = subtype if subtype.present?
