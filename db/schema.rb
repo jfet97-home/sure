@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_19_141000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_20_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -720,6 +720,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_141000) do
     t.string "account_id"
     t.string "account_status"
     t.string "account_type"
+    t.jsonb "balance_snapshot"
     t.datetime "created_at", null: false
     t.decimal "credit_limit", precision: 19, scale: 4
     t.string "currency"
