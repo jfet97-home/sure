@@ -12,6 +12,10 @@ module Sure
   SESSION_COOKIE_KEY = "_sure_session"
 
   class Application < Rails::Application
+    # dotenv's before_configuration hook has run; load files before any consumers.
+    require_relative "../lib/secret_files"
+    SecretFiles.load!
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 
