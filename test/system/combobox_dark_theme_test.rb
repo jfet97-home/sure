@@ -40,8 +40,7 @@ class ComboboxDarkThemeTest < ApplicationSystemTestCase
     assert_hover_uses_theme_colors(dialog)
   end
 
-  # Above the breakpoint the results open in an inline dropdown, whose hovered
-  # result reads the same gem variable.
+  # above the breakpoint the inline dropdown uses the same application hover token.
   test "desktop security dropdown uses theme colors in the dark theme" do
     visit new_trade_path(account_id: accounts(:investment).id)
     assert_selector "html[data-theme='dark']"
@@ -62,7 +61,7 @@ class ComboboxDarkThemeTest < ApplicationSystemTestCase
       option.call("Microsoft")
       option.call("Apple").hover
 
-      assert_equal token_color("--color-container-inset-hover"), computed(option.call("Apple"), "backgroundColor")
+      assert_equal token_color("--color-container-hover"), computed(option.call("Apple"), "backgroundColor")
       assert_equal element_style("text-primary", "color"), computed(option.call("Apple"), "color")
       assert_equal token_color("--color-container"), computed(option.call("Microsoft"), "backgroundColor")
     end
