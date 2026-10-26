@@ -68,7 +68,9 @@ curl --fail --location --silent --show-error --output .env https://raw.githubuse
 
 #### Generate the app secret key
 
-The app requires an environment variable called `SECRET_KEY_BASE` to run.
+The app requires `SECRET_KEY_BASE` or `SECRET_KEY_BASE_FILE` to run.
+See [secret files](secret-files.md) for native file delivery of the application
+key, database password and explicit Active Record encryption keys.
 
 We will first need to generate this in the terminal. If you have `openssl` installed on your computer, you can generate it with the following command:
 
