@@ -25,6 +25,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     Capybara.register_driver :selenium_remote_chrome do |app|
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_argument("--window-size=1400,1400")
+      options.add_argument("--headless=new") if ENV["E2E_BROWSER"] == "headless_chrome"
 
       Capybara::Selenium::Driver.new(
         app,
