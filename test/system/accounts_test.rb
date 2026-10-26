@@ -160,8 +160,11 @@ class AccountsTest < ApplicationSystemTestCase
 
       within_testid("account-sidebar-tabs") do
         click_on "All"
-        find("details", text: Accountable.from_type(accountable_type).display_name).click
-        assert_text account_name
+        within "#all_#{accountable_type.underscore}" do
+          within "details[data-institution-group='#{institution_name}'][open]" do
+            assert_link account_name
+          end
+        end
       end
 
       visit accounts_url
