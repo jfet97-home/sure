@@ -5,7 +5,8 @@ default: &default
   host: <%= ENV.fetch("DB_HOST") { "127.0.0.1" } %>
   port: <%= ENV.fetch("DB_PORT") { "5432" } %>
   username: <%= ENV.fetch("POSTGRES_USER") { nil } %>
-  password: <%= ENV.fetch("POSTGRES_PASSWORD") { nil } %>
+  # escape YAML's control characters and line separators without changing Unicode values.
+  password: <%= ENV.fetch("POSTGRES_PASSWORD") { nil }.to_json.gsub(/[\u007f-\u009f\u2028\u2029\ufffe\uffff]/) { |char| "\\u%04x" % char.ord } %>
 
 development:
   <<: *default
