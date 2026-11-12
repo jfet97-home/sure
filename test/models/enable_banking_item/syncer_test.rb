@@ -32,7 +32,7 @@ class EnableBankingItem::SyncerTest < ActiveSupport::TestCase
   end
 
   test "a throttled import defers without reporting a generic failure or losing authorization" do
-    @item.update!(session_expires_at: 1.day.from_now)
+    @item.update!(session_expires_at: 1.day.from_now, last_successful_sync_at: 2.hours.ago)
     link_visible_account!
     previous_success = @item.last_successful_sync_at
     error = Provider::EnableBanking::EnableBankingError.new("limited", :rate_limited, http_status: 429)
@@ -49,7 +49,7 @@ class EnableBankingItem::SyncerTest < ActiveSupport::TestCase
     assert_equal true, sync.sync_stats["deferred"]
     assert_equal true, sync.sync_stats["rate_limited"]
     assert_equal 0, sync.sync_stats["total_errors"]
-    assert_nil @item.last_synced_at
+    assert_equal previous_success, @item.last_synced_at
   end
 
   test "a partial balance refresh retains the earlier successful timestamp" do

@@ -350,6 +350,15 @@ class HoldingTest < ActiveSupport::TestCase
     assert_equal BigDecimal("20"), batch.first.avg_cost&.amount, "the batch's figure"
   end
 
+  test "batch cost stays unknown for a Directa position with incomplete history" do
+    link_directa_account(@account)
+    create_trade(@amzn.security, account: @account, qty: 10, price: 212, date: Date.current)
+
+    assert_nil @amzn.avg_cost
+    Holding.preload_avg_costs([ @amzn ])
+    assert_nil @amzn.avg_cost
+  end
+
   test "the batch leaves a stored cost basis alone and does not query for it" do
     @amzn.update!(cost_basis: 100)
     create_trade(@amzn.security, account: @account, qty: 10, price: 212.00, date: Date.current)
