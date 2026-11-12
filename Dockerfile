@@ -2,7 +2,7 @@
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
 ARG RUBY_VERSION=3.4.13
-FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim AS base
+FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim-trixie@sha256:03e203fab47d495a1d0046d10040db89367b361328ecd4af469f0433e2dd9ce1 AS base
 
 # Rails app lives here
 WORKDIR /rails
@@ -10,6 +10,7 @@ WORKDIR /rails
 # Install base packages
 # poppler-utils provides pdftoppm, required for the PDF vision processing path
 RUN apt-get update -qq \
+    && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y curl libvips postgresql-client libyaml-0-2 procps libjemalloc2 poppler-utils \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
@@ -106,6 +107,7 @@ USER 1000:1000
 # runtime-only version metadata stays after cached dependency and asset layers.
 ARG BUILD_COMMIT_SHA
 ENV BUILD_COMMIT_SHA=${BUILD_COMMIT_SHA}
+LABEL org.opencontainers.image.revision=${BUILD_COMMIT_SHA}
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]

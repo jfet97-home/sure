@@ -687,6 +687,7 @@ GEM
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
       uber (< 0.2.0)
+    resolv (0.8.1)
     retriable (3.4.1)
     rexml (3.4.2)
     rotp (6.3.0)
@@ -1000,15 +1001,17 @@ DEPENDENCIES
   propshaft
   puma (>= 7.2.1)
   pundit
+  rack (~> 3.2, >= 3.2.8)
   rack-attack (~> 6.6)
   rack-cors
   rack-mini-profiler
-  rails (~> 8.1.0)
+  rails (~> 8.1.4, >= 8.1.4.1)
   rails-i18n
   rails-settings-cached
   rchardet
   redcarpet
   redis (~> 5.4)
+  resolv (>= 0.7.2)
   rotp (~> 6.3)
   rqrcode (~> 3.0)
   rspec-rails
@@ -1048,4 +1051,4 @@ RUBY VERSION
    ruby 3.4.13p195
 
 BUNDLED WITH
-   2.6.7
+   2.6.9
