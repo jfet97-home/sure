@@ -135,6 +135,9 @@
               </div>
             <% end %>
           </div>
+          <% if @lots.any? %>
+            <%= render "holdings/lots", holding: @holding, lots: @lots, can_edit: @can_write_lots, provider_cost: @lots_provider_cost %>
+          <% end %>
           <div class="flex items-center justify-between text-sm">
             <dt class="text-secondary"><%= t(".book_value_label") %></dt>
             <dd class="text-primary">

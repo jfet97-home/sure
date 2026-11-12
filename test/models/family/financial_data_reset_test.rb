@@ -28,7 +28,7 @@ class Family::FinancialDataResetTest < ActiveSupport::TestCase
     associations = Family::FinancialDataReset.provider_item_associations
 
     assert_not_empty associations
-    assert_equal associations, Family::FinancialDataReset::PROVIDER_ITEM_ASSOCIATIONS
+    assert_empty Family::Syncer.syncable_item_associations - associations
     assert associations.all? { |name| name.to_s.end_with?("_items") }
 
     associations.each do |name|
