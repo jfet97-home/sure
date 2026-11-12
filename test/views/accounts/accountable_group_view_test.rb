@@ -7,6 +7,8 @@ class AccountableGroupViewTest < ActionView::TestCase
   setup do
     @user = users(:family_admin)
     Current.stubs(:user).returns(@user)
+    Current.stubs(:family).returns(@user.family)
+    Current.stubs(:accessible_accounts).returns(@user.accessible_accounts)
     @user.stubs(:always_expanded_account_group?).returns(false)
     @eur = accounts(:depository)
     @eur.assign_attributes(name: "Current account", institution_name: "Fineco", currency: "EUR", balance: 100)

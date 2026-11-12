@@ -58,6 +58,9 @@ class Holding < ApplicationRecord
   # otherwise falls back to calculating from trades. Returns nil when cost
   # basis cannot be determined (no trades and no provider cost_basis).
   def avg_cost
+    # a batch answer includes the provider's incomplete-history restrictions
+    return @preloaded_avg_cost if defined?(@preloaded_avg_cost) && !changed?
+
     return nil if scalable_snapshot_backed? && !cost_basis_locked?
 
     # Use stored cost_basis if available (eliminates N+1 queries)
@@ -77,14 +80,6 @@ class Holding < ApplicationRecord
     # directa's order history is incomplete, so an unknown broker basis cannot
     # be reconstructed from the trades currently stored in this account.
     return nil if directa_linked?
-
-    # A caller that has many holdings can compute the fallback for all of
-    # them in one query and hand each its answer (.preload_avg_costs), so a
-    # page that lists every position does not run calculate_avg_cost's two
-    # queries per holding. nil is a valid preloaded answer: "unknown". It
-    # answers for the attributes it was computed from, so a holding changed
-    # since then computes its own.
-    return @preloaded_avg_cost if defined?(@preloaded_avg_cost) && !changed?
 
     # Fallback to calculation for holdings without pre-computed cost_basis
     calculate_avg_cost
@@ -133,13 +128,14 @@ class Holding < ApplicationRecord
       .pluck(
         Arel.sql("holdings.id"),
         Arel.sql(sanitize_sql_array([ "BOOL_OR(trades.investment_activity_label IN (?))", Trade::INTERNAL_MOVEMENT_LABELS ])),
+        Arel.sql("EXISTS (SELECT 1 FROM account_providers WHERE account_providers.account_id = holdings.account_id AND account_providers.provider_type IN ('DirectaAccount', 'ScalableAccount'))"),
         *avg_cost_totals_sql
       )
       .index_by(&:first)
 
     pending.each do |holding|
-      _id, internal_movement, total_cost, total_qty, rate_missing = rows[holding.id]
-      value = avg_cost_from_totals(total_cost, total_qty, rate_missing, holding.currency) unless internal_movement
+      _id, internal_movement, snapshot_backed, total_cost, total_qty, rate_missing = rows[holding.id]
+      value = avg_cost_from_totals(total_cost, total_qty, rate_missing, holding.currency) unless internal_movement || snapshot_backed
       holding.preload_avg_cost(value)
     end
   end
