@@ -3,7 +3,9 @@ source "https://rubygems.org"
 ruby file: ".ruby-version"
 
 # Rails
-gem "rails", "~> 8.1.0"
+gem "rails", "~> 8.1.4", ">= 8.1.4.1"
+gem "rack", "~> 3.2", ">= 3.2.8"
+gem "resolv", ">= 0.7.2"
 
 # Drivers
 gem "pg", "~> 1.5"
