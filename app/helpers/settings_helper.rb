@@ -154,6 +154,10 @@ module SettingsHelper
       return { status: :off } unless item
 
       bank_sync_provider_summary(item, :scalable)
+
+    when "sharesight"
+      return { status: :off } unless @sharesight_items&.any?
+      sync_based_summary(key)
     else
       { status: :off }
     end
