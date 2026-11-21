@@ -460,7 +460,7 @@ class Holding::Materializer
     # snapshot and no market prices), and they read the same provider costs
     # and splits as the holdings do.
     def costed_security_ids
-      @costed_security_ids ||= (@holdings.map(&:security_id) | @calculator.lots_by_security.keys)
+      @costed_security_ids ||= (@holdings.map(&:security_id) | @calculator&.lots_by_security.to_h.keys)
     end
 
     def splits_by_security

@@ -43,13 +43,11 @@ class EnableBankingItem::AuthorizationRequestConcurrencyTest < ActiveSupport::Te
     locked = Concurrent::CountDownLatch.new(1)
     # Pause once the session is stored, before the transaction that writes
     # the request.
-    authorizing.define_singleton_method(:update!) do |attributes|
-      super(attributes).tap do
-        next unless attributes.key?(:session_id)
+    authorizing.define_singleton_method(:import_accounts_from_session) do |accounts|
+      session_saved.count_down
+      raise "the other connection never took the item lock" unless locked.wait(5)
 
-        session_saved.count_down
-        raise "the other connection never took the item lock" unless locked.wait(5)
-      end
+      super(accounts)
     end
 
     authorization = Thread.new do

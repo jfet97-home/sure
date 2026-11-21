@@ -72,7 +72,7 @@ class InvestmentStatement
     @current_holdings ||= Holding::CurrentForInvestmentAccounts
       .new(investment_account_ids)
       .relation
-      .includes(:security, :account)
+      .includes(:security, account: :account_providers)
   end
 
   # current_holdings as an Array, with the average-cost fallback for every
