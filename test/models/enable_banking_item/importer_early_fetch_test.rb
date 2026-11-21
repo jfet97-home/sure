@@ -320,7 +320,7 @@ class EnableBankingItem::ImporterEarlyFetchTest < ActiveSupport::TestCase
     importer = EnableBankingItem::Importer.new(@item, enable_banking_provider: provider)
     importer.stubs(:fetch_session_data).returns(accounts: [])
 
-    importer.import
+    assert_raises(Provider::EnableBanking::EnableBankingError) { importer.import }
 
     assert_nil @item.reload.full_history_fetch_requested_at
   end
