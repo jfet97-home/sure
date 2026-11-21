@@ -123,7 +123,7 @@ class EnableBankingItem::ImporterFullHistoryTest < ActiveSupport::TestCase
     importer = EnableBankingItem::Importer.new(@enable_banking_item, enable_banking_provider: provider)
     importer.stubs(:fetch_session_data).returns(accounts: [])
 
-    importer.import
+    assert_raises(Provider::EnableBanking::EnableBankingError) { importer.import }
 
     assert_nil @enable_banking_account.reload.raw_transactions_payload
   end
