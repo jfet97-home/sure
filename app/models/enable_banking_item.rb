@@ -121,8 +121,7 @@ class EnableBankingItem < ApplicationRecord
   end
 
   def refresh_pending_account_setup!
-    unlinked_accounts = enable_banking_accounts.left_joins(:account_provider).where(account_providers: { id: nil })
-    update!(pending_account_setup: unlinked_accounts.exists?)
+    update!(pending_account_setup: enable_banking_accounts.needs_setup.exists?)
   end
 
   # A session-level 401/404 flags the item requires_update while its session
