@@ -135,6 +135,7 @@ class EnableBankingItem::SyncerTest < ActiveSupport::TestCase
 
   test "a sync whose session the bank rejects still purges stale early-fetched rows" do
     @item.update!(session_expires_at: 1.day.from_now)
+    link_visible_account!
     eba = EnableBankingAccount.create!(
       enable_banking_item: @item, name: "Skipped", uid: "skipped_uid", account_id: "skipped-uuid", currency: "EUR"
     )
@@ -252,6 +253,7 @@ class EnableBankingItem::SyncerTest < ActiveSupport::TestCase
 
   test "a truncated full-history fetch is recorded as a data warning on the sync" do
     @item.update!(session_expires_at: 1.day.from_now)
+    link_visible_account!
     @item.stubs(:import_latest_enable_banking_data).returns(success: true, transactions_truncated: 1)
     sync = Sync.create!(syncable: @item)
 
@@ -265,6 +267,7 @@ class EnableBankingItem::SyncerTest < ActiveSupport::TestCase
 
   test "a truncated full-history fetch is recorded even when another account fails" do
     @item.update!(session_expires_at: 1.day.from_now)
+    link_visible_account!
     @item.stubs(:import_latest_enable_banking_data).returns(success: false, transactions_failed: 1, transactions_truncated: 1)
     sync = Sync.create!(syncable: @item)
 

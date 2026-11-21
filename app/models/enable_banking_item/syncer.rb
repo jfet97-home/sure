@@ -26,7 +26,6 @@ class EnableBankingItem::Syncer
   end
 
   def perform_import(sync, psu_context: nil)
-
     # Local only and needs no session, so it also runs when the session has
     # expired or the bank rejects it. Runs before the import's early fetch, so
     # a payload fetched in this sync is never deleted.
@@ -45,6 +44,7 @@ class EnableBankingItem::Syncer
     unless enable_banking_item.has_visible_linked_accounts?
       enable_banking_item.refresh_pending_account_setup!
       stats = (sync.reload.sync_stats || {}).deep_stringify_keys
+      stats["unlinked_accounts"] = enable_banking_item.enable_banking_accounts.needs_setup.count
       stats["catalog_only"] = true
       stats["catalog_accounts"] = enable_banking_item.enable_banking_accounts.count
       stats["deferred_reason"] = "account_setup_required"
